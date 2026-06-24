@@ -1,0 +1,46 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "alibabacloud-yaochi-db-mcp-server"
+version = "0.1.0"
+description = "瑶池数据库 AI Native MCP Server — 一条命令安装，即可通过 AI 编码助手创建数据库实例、执行 SQL"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Alibaba Cloud Yaochi Team" },
+]
+keywords = ["mcp", "alibaba-cloud", "database", "yaochi", "dms", "ai-native"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "alibabacloud-tea-openapi>=0.3.0",
+    "alibabacloud-tea-util>=0.3.0",
+    "alibabacloud-dms-enterprise20181101>=3.0.0",
+    "alibabacloud-dds20151201>=5.0.0",
+    "alibabacloud-rds20140815>=5.0.0",
+    "alibabacloud-polardb20170801>=5.0.0",
+    "alibabacloud-r-kvstore20150101>=5.0.0",
+    "alibabacloud-vpc20160428>=3.0.0",
+    "alibabacloud-das20200116>=3.0.0",
+    "redis>=5.0.0",
+    "pymongo>=4.6.0",
+    "pymysql>=1.1.0",
+]
+
+[project.scripts]
+yaochi-db-mcp-server = "yaochi_db_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/yaochi_db_mcp"]
