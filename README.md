@@ -11,7 +11,7 @@ Yaochi Database AI Native MCP Server — One MCP Server to manage all Alibaba Cl
 
 A database tool service built on [Model Context Protocol (MCP)](https://modelcontextprotocol.io), enabling AI coding assistants (Cursor, Claude Desktop, Qoder, etc.) to directly operate Alibaba Cloud databases.
 
-**Core Scenario**: After AI writes code, it automatically creates a database → creates tables → executes SQL to verify → calls Yaochi Agent for performance diagnosis — all without leaving the IDE.
+**Core Scenario**: After AI writes code, it automatically creates a database → creates tables → executes SQL to verify → calls Yaochi Database Agent for performance diagnosis — all without leaving the IDE.
 
 ## Supported Database Engines
 
@@ -22,7 +22,7 @@ A database tool service built on [Model Context Protocol (MCP)](https://modelcon
 | **MongoDB** | Create replica set, execute MongoDB commands |
 | **Tair (Redis)** | Create instance, execute Redis commands |
 
-## Yaochi Agent
+## Yaochi Database Agent
 
 Built-in AI database advisor powered by Alibaba Cloud’s official documentation and expert knowledge:
 
@@ -36,7 +36,7 @@ Supports multi-turn conversations and covers all Alibaba Cloud database engines 
 
 | Tool | Description |
 |------|-------------|
-| `ask_yaochi_agent` | Yaochi Agent — AI database advisor (diagnosis, best practices, architecture) |
+| `ask_yaochi_agent` | Yaochi Database Agent — AI database advisor (diagnosis, best practices, architecture) |
 | `create_instance` | Create a database instance |
 | `list_instances` | List existing instances |
 | `execute_instance_sql` | Execute SQL via instance ID (ephemeral account, no password needed) |
@@ -127,7 +127,7 @@ AI automatically:
    → OK
 
 5. ask_yaochi_agent(query="PolarDB cluster pc-bp1xxx performance diagnosis")
-   → Returns optimization suggestions from Yaochi Agent
+   → Returns optimization suggestions from Yaochi Database Agent
 ```
 
 ## License

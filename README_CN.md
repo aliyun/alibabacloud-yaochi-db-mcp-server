@@ -11,7 +11,7 @@
 
 基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io) 构建的数据库工具服务，让 AI 编码助手（Cursor、Claude Desktop、Qoder 等）可以直接操作阿里云数据库。
 
-**核心场景**：AI 写完代码后，自动创建数据库 → 建表 → 执行 SQL 验证 → 调用瑶池 Agent 执行性能诊断 —— 全程无需离开 IDE。
+**核心场景**：AI 写完代码后，自动创建数据库 → 建表 → 执行 SQL 验证 → 调用瑶池数据库 Agent 执行性能诊断 —— 全程无需离开 IDE。
 
 ## 支持的数据库引擎
 
@@ -22,7 +22,7 @@
 | **MongoDB** | 创建副本集、执行 MongoDB 命令 |
 | **Tair (Redis)** | 创建实例、执行 Redis 命令 |
 
-## 瑶池 Agent
+## 瑶池数据库 Agent
 
 内置 AI 数据库智能顾问，融合官方文档知识库与专家经验：
 
@@ -36,7 +36,7 @@
 
 | 工具 | 说明 |
 |------|------|
-| `ask_yaochi_agent` | 瑶池 Agent — AI 数据库智能顾问（诊断、最佳实践、架构建议） |
+| `ask_yaochi_agent` | 瑶池数据库 Agent — AI 数据库智能顾问（诊断、最佳实践、架构建议） |
 | `create_instance` | 创建数据库实例 |
 | `list_instances` | 列出已有实例 |
 | `execute_instance_sql` | 通过实例 ID 执行 SQL（临时账号，无需密码） |
@@ -127,7 +127,7 @@ AI 自动完成：
    → OK
 
 5. ask_yaochi_agent(query="PolarDB 集群 pc-bp1xxx 性能诊断")
-   → 瑶池 Agent 返回优化建议
+   → 瑶池数据库 Agent 返回优化建议
 ```
 
 ## 许可证
