@@ -11,7 +11,7 @@
 
 基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io) 构建的数据库工具服务，让 AI 编码助手（Cursor、Claude Desktop、Qoder 等）可以直接操作阿里云数据库。
 
-**核心场景**：AI 写完代码后，自动创建数据库 → 建表 → 执行 SQL 验证 —— 全程无需离开 IDE。
+**核心场景**：AI 写完代码后，自动创建数据库 → 建表 → 执行 SQL 验证 → 调用瑶池 Agent 执行性能诊断 —— 全程无需离开 IDE。
 
 ## 支持的数据库引擎
 
@@ -22,10 +22,21 @@
 | **MongoDB** | 创建副本集、执行 MongoDB 命令 |
 | **Tair (Redis)** | 创建实例、执行 Redis 命令 |
 
+## 瑶池 Agent
+
+内置 AI 数据库智能顾问，融合官方文档知识库与专家经验：
+
+- **知识问答** — 即时解答数据库使用问题，减少咨询工单
+- **智能诊断** — 通过 OpenAPI 自动执行性能诊断任务，精准定位问题
+- **最佳实践** — 提供架构选型建议和业务场景优化方案
+
+支持多轮对话，覆盖阿里云全系数据库引擎（RDS、PolarDB、MongoDB、Tair、Lindorm 等）。
+
 ## 提供的工具
 
 | 工具 | 说明 |
 |------|------|
+| `ask_yaochi_agent` | 瑶池 Agent — AI 数据库智能顾问（诊断、最佳实践、架构建议） |
 | `create_instance` | 创建数据库实例 |
 | `list_instances` | 列出已有实例 |
 | `execute_instance_sql` | 通过实例 ID 执行 SQL（临时账号，无需密码） |
@@ -35,14 +46,13 @@
 | `search_database` | 搜索 DMS 中的数据库 |
 | `execute_sql` | 通过 DMS 执行 SQL |
 | `register_to_dms` | 注册实例到 DMS |
-| `ask_yaochi_agent` | 瑶池 Agent 大模型问答 |
 
 ## 快速开始
 
 ### 安装
 
 ```bash
-git clone https://github.com/aliyun/alibabacloud-yaochi-db-mcp-server.git
+git clone http://gitlab.alibaba-inc.com/cloudmon/alibabacloud-yaochi-db-mcp-server.git
 cd alibabacloud-yaochi-db-mcp-server
 python3 -m venv .venv
 source .venv/bin/activate
@@ -99,19 +109,25 @@ yaochi-db-mcp-server
 ## 使用示例
 
 ```
-用户：帮我创建一个 RDS MySQL，然后建个 users 表
+用户：帮我开一个 PolarDB MySQL 集群，建个 orders 表，再开一个 Tair 做缓存
 
 AI 自动完成：
-1. create_instance(engine="rds-mysql")
-   → 返回 instance_id="rm-bp1xxx"
+1. create_instance(engine="polardb-mysql")
+   → 返回 instance_id="pc-bp1xxx"
 
-2. execute_instance_sql(instance_id="rm-bp1xxx", database="testdb",
-     sql="CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(50))", force=true)
+2. execute_instance_sql(instance_id="pc-bp1xxx", engine="polardb-mysql", database="testdb",
+     sql="CREATE TABLE orders (id BIGINT PRIMARY KEY, amount DECIMAL(10,2))", force=true)
    → 自动开通公网 + 白名单 + 建库 + 建表成功
 
-3. execute_instance_sql(instance_id="rm-bp1xxx", database="testdb",
-     sql="SELECT * FROM users")
-   → 返回查询结果
+3. create_instance(engine="tair")
+   → 返回 instance_id="r-bp1xxx"
+
+4. execute_redis(host="r-bp1xxx.redis.rds.aliyuncs.com", port=6379, password="xxx",
+     command="SET order:1001 '{\"amount\":99.9}'")
+   → OK
+
+5. ask_yaochi_agent(query="PolarDB 集群 pc-bp1xxx 性能诊断")
+   → 瑶池 Agent 返回优化建议
 ```
 
 ## 许可证

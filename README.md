@@ -11,7 +11,7 @@ Yaochi Database AI Native MCP Server — One MCP Server to manage all Alibaba Cl
 
 A database tool service built on [Model Context Protocol (MCP)](https://modelcontextprotocol.io), enabling AI coding assistants (Cursor, Claude Desktop, Qoder, etc.) to directly operate Alibaba Cloud databases.
 
-**Core Scenario**: After AI writes code, it automatically creates a database → creates tables → executes SQL to verify — all without leaving the IDE.
+**Core Scenario**: After AI writes code, it automatically creates a database → creates tables → executes SQL to verify → calls Yaochi Agent for performance diagnosis — all without leaving the IDE.
 
 ## Supported Database Engines
 
@@ -22,10 +22,21 @@ A database tool service built on [Model Context Protocol (MCP)](https://modelcon
 | **MongoDB** | Create replica set, execute MongoDB commands |
 | **Tair (Redis)** | Create instance, execute Redis commands |
 
+## Yaochi Agent
+
+Built-in AI database advisor powered by Alibaba Cloud’s official documentation and expert knowledge:
+
+- **Knowledge Q&A** — Instantly answers database usage questions, reducing support tickets
+- **Intelligent Diagnosis** — Auto-executes performance diagnostics via OpenAPI, pinpointing issues
+- **Best Practices** — Provides architecture recommendations and optimization suggestions tailored to your workload
+
+Supports multi-turn conversations and covers all Alibaba Cloud database engines (RDS, PolarDB, MongoDB, Tair, Lindorm, etc.).
+
 ## Available Tools
 
 | Tool | Description |
 |------|-------------|
+| `ask_yaochi_agent` | Yaochi Agent — AI database advisor (diagnosis, best practices, architecture) |
 | `create_instance` | Create a database instance |
 | `list_instances` | List existing instances |
 | `execute_instance_sql` | Execute SQL via instance ID (ephemeral account, no password needed) |
@@ -35,14 +46,13 @@ A database tool service built on [Model Context Protocol (MCP)](https://modelcon
 | `search_database` | Search databases in DMS |
 | `execute_sql` | Execute SQL via DMS |
 | `register_to_dms` | Register instance to DMS |
-| `ask_yaochi_agent` | Yaochi Agent LLM Q&A |
 
 ## Quick Start
 
 ### Installation
 
 ```bash
-git clone https://github.com/aliyun/alibabacloud-yaochi-db-mcp-server.git
+git clone http://gitlab.alibaba-inc.com/cloudmon/alibabacloud-yaochi-db-mcp-server.git
 cd alibabacloud-yaochi-db-mcp-server
 python3 -m venv .venv
 source .venv/bin/activate
@@ -99,19 +109,25 @@ Add to your AI client's MCP configuration:
 ## Usage Example
 
 ```
-User: Create an RDS MySQL and build a users table
+User: Create a PolarDB MySQL cluster, build an orders table, and set up a Tair cache
 
 AI automatically:
-1. create_instance(engine="rds-mysql")
-   → Returns instance_id="rm-bp1xxx"
+1. create_instance(engine="polardb-mysql")
+   → Returns instance_id="pc-bp1xxx"
 
-2. execute_instance_sql(instance_id="rm-bp1xxx", database="testdb",
-     sql="CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(50))", force=true)
+2. execute_instance_sql(instance_id="pc-bp1xxx", engine="polardb-mysql", database="testdb",
+     sql="CREATE TABLE orders (id BIGINT PRIMARY KEY, amount DECIMAL(10,2))", force=true)
    → Auto-provisions public access + whitelist + creates DB + creates table
 
-3. execute_instance_sql(instance_id="rm-bp1xxx", database="testdb",
-     sql="SELECT * FROM users")
-   → Returns query results
+3. create_instance(engine="tair")
+   → Returns instance_id="r-bp1xxx"
+
+4. execute_redis(host="r-bp1xxx.redis.rds.aliyuncs.com", port=6379, password="xxx",
+     command="SET order:1001 '{\"amount\":99.9}'")
+   → OK
+
+5. ask_yaochi_agent(query="PolarDB cluster pc-bp1xxx performance diagnosis")
+   → Returns optimization suggestions from Yaochi Agent
 ```
 
 ## License
